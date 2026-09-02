@@ -1,0 +1,12 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { apiRequest } from "@/lib/api/client";
+type User = { id: string; display_name: string | null; status: string; created_at: string };
+type Result = { data: User[]; total: number; page: number; pageSize: number };
+export default function AdminUsers() {
+  const [result, setResult] = useState<Result | null>(null); const [search, setSearch] = useState(""); const [loading, setLoading] = useState(true); const [error, setError] = useState("");
+  function load(value = search) { setLoading(true); setError(""); apiRequest<Result>(`/api/admin/users?page=1&pageSize=25&search=${encodeURIComponent(value)}`).then(setResult).catch((reason: Error) => setError(reason.message)).finally(() => setLoading(false)); }
+  useEffect(() => { void apiRequest<Result>("/api/admin/users?page=1&pageSize=25").then(setResult).catch((reason: Error) => setError(reason.message)).finally(() => setLoading(false)); }, []);
+  return <section className="admin-content"><div className="admin-page-heading"><div><p className="admin-kicker">DIRECTORY</p><h2>Users</h2><p>Search and inspect platform accounts.</p></div></div><form className="admin-search" onSubmit={(event) => { event.preventDefault(); load(); }}><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name or user ID" aria-label="Search users" />{search && <button type="button" onClick={() => { setSearch(""); load(""); }}>Clear</button>}<button type="submit">Search</button></form>{error && <div className="admin-error" role="alert">Unable to load users. {error}</div>}<div className="admin-panel table-panel"><div className="admin-table-meta"><span>{result ? `${result.total.toLocaleString()} accounts` : "Loading accounts"}</span><span>Server-side pagination · 25 per page</span></div><div className="admin-table-scroll"><table><thead><tr><th>User</th><th>Status</th><th>Joined</th><th>Account ID</th></tr></thead><tbody>{loading ? <tr><td colSpan={4}>Loading users...</td></tr> : result?.data.length ? result.data.map((user) => <tr key={user.id}><td><strong>{user.display_name || "Unnamed user"}</strong><small>{user.id.slice(0, 8)}...</small></td><td><span className={`status-pill ${user.status}`}>{user.status}</span></td><td>{new Date(user.created_at).toLocaleDateString()}</td><td className="mono">{user.id}</td></tr>) : <tr><td colSpan={4}>No users match your search.</td></tr>}</tbody></table></div></div></section>;
+}
