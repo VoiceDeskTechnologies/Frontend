@@ -151,4 +151,23 @@
 .phone-shell:not(.feature-page) .call-button { flex:none; align-self:center; }
 @media (min-width:601px) { .phone-shell:not(.feature-page) .dialer-content { transform:translateY(-64px) scale(.82); transform-origin:top center; } .phone-shell:not(.feature-page) .keypad { gap:12px 16px; margin-bottom:20px; } }
 @media (max-width:600px) { .phone-shell:not(.feature-page) .app-header { padding-left:24px; padding-right:24px; }.phone-shell:not(.feature-page) .brand-name { font-size:25px; letter-spacing:-.8px; }.phone-shell:not(.feature-page) .brand-parent { font-size:10px; }.phone-shell:not(.feature-page) .icon-button { width:44px; height:44px; font-size:17px; }.phone-shell:not(.feature-page) .dialer-content { margin-top:clamp(22px,4vh,34px); padding-bottom:92px; transform:translateY(-42px) scale(.8); transform-origin:top center; }.phone-shell:not(.feature-page) .keypad { gap:11px 16px; margin-bottom:22px; }.phone-shell:not(.feature-page) .key { width:82px; height:82px; }.phone-shell:not(.feature-page) .call-button { width:68px; height:68px; } }
+.phone-shell:has(.live-call) { background:radial-gradient(circle at 10% 14%,#334752 0,#1c3032 28%,#252338 62%,#0d131c 100%); }
+.phone-shell:has(.live-call)::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.22; background:linear-gradient(132deg,transparent 18%,#8292a01c 18.2%,transparent 48%,#b2a8d01a 48.2%,transparent 70%); }
+.live-call { width:min(430px,calc(100% - 40px)); margin-top:4vh; }
+.live-call .call-topline { color:#d2d7dc; }
+.live-call .call-back,.live-call .call-more { border:0; color:#e2e6e9; background:#ffffff12; }
+.live-call .call-back { transform:none; font-size:26px; }
+.live-call .caller-orb { border-color:#ffffff3d; color:#fff; background:linear-gradient(145deg,#657382,#28333d); box-shadow:0 0 0 14px #ffffff08,0 22px 60px #0005; }
+.live-call h1 { color:#f4f5f6; font-weight:400; }
+.live-call .caller-number,.live-call .agent-line { color:#d3d8dc; }
+.live-call .agent-line .status-dot { background:#80d18e; }
+.live-call .waveform { display:none; }
+.live-call .call-controls { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 20px; width:300px; margin:78px auto 31px; }
+.live-call .call-controls .end-call { grid-column:2; }
+.live-call .control { color:#e3e6e8; }
+.live-call .control span { width:58px; height:58px; border-color:#ffffff12; background:#ffffff12; }
+.live-call .control small { color:#e4e6e8; }
+.live-call .active-control span { color:#18201d; background:#f5f7f7; }
+.live-call .end-call { margin:0 auto; }
+.live-call .end-call span { width:64px; height:64px; background:#e93649; box-shadow:0 10px 30px #e9364955; }
 .task-modal { max-height:90svh; overflow:auto; }.task-modal label { margin:16px 0; }.settings-panel { padding:26px; border:1px solid var(--line); border-radius:18px; background:#151b1bdd; }.setting-copy h2 { margin:0 0 8px; font:500 21px 'Space Grotesk'; }.setting-copy p { color:#a9b2b2; line-height:1.55; }.toggle { display:flex !important; align-items:center; gap:10px; color:#dce2df !important; cursor:pointer; }.toggle input { position:absolute; opacity:0; pointer-events:none; }.toggle-track { position:relative; width:46px; height:26px; flex:none; border-radius:20px; background:#394342; transition:background .2s; }.toggle-track::after { content:""; position:absolute; width:20px; height:20px; top:3px; left:3px; border-radius:50%; background:#d6ddda; transition:transform .2s; }.toggle input:checked + .toggle-track { background:var(--green); }.toggle input:checked + .toggle-track::after { transform:translateX(20px); background:#12200e; }.settings-panel small { display:block; margin-top:7px; color:var(--muted); }.save-confirmation { color:var(--green); font-size:13px; }
