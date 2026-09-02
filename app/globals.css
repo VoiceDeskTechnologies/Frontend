@@ -154,7 +154,8 @@
 .phone-shell:has(.live-call) { background:radial-gradient(circle at 10% 14%,#334752 0,#1c3032 28%,#252338 62%,#0d131c 100%); }
 .phone-shell:has(.live-call)::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.22; background:linear-gradient(132deg,transparent 18%,#8292a01c 18.2%,transparent 48%,#b2a8d01a 48.2%,transparent 70%); }
 .live-call { width:min(430px,calc(100% - 40px)); margin-top:4vh; }
-.phone-shell:not(.feature-page):has(.live-call) .live-call { height:calc(100svh - 92px); min-height:0; margin-top:0; padding:10px 0 96px; overflow:hidden; }
+.phone-shell:not(.feature-page):has(.live-call) .live-call { height:calc(100svh - 92px); min-height:0; margin-top:0; padding:10px 0 96px; overflow:hidden; z-index:3; }
+.phone-shell:not(.feature-page):has(.live-call) .bottom-nav { z-index:2; }
 .phone-shell:not(.feature-page):has(.live-call) .caller-orb { margin-top:clamp(28px,8vh,70px); }
 .phone-shell:not(.feature-page):has(.live-call) .call-controls { margin-top:clamp(30px,9vh,78px); }
 .phone-shell:not(.feature-page):has(.live-call) .call-popover { max-height:28svh; overflow:auto; }
@@ -168,10 +169,19 @@
 .live-call .waveform { display:none; }
 .live-call .call-controls { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 20px; width:300px; margin:78px auto 31px; }
 .live-call .call-controls .end-call { grid-column:2; }
+.live-call .call-controls .end-call { grid-row:2; }
 .live-call .control { color:#e3e6e8; }
 .live-call .control span { width:58px; height:58px; border-color:#ffffff12; background:#ffffff12; }
 .live-call .control small { color:#e4e6e8; }
 .live-call .active-control span { color:#18201d; background:#f5f7f7; }
+.live-call .call-controls .control:first-child span { font-size:0; }
+.live-call .call-controls .control:first-child span::before { content:""; width:12px; height:19px; border:2px solid currentColor; border-radius:8px; }
+.live-call .call-controls .control:first-child span::after { content:""; width:22px; height:11px; margin-top:-5px; border-bottom:2px solid currentColor; border-radius:0 0 14px 14px; box-shadow:0 7px 0 -5px currentColor; }
 .live-call .end-call { margin:0 auto; }
 .live-call .end-call span { width:64px; height:64px; background:#e93649; box-shadow:0 10px 30px #e9364955; }
+.in-call-keypad { position:absolute; left:50%; bottom:82px; z-index:4; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:min(290px,calc(100vw - 56px)); padding:16px; border:1px solid #ffffff24; border-radius:20px; background:#172027ee; box-shadow:0 18px 50px #0009; transform:translateX(-50%); backdrop-filter:blur(18px); }
+.in-call-keypad output { grid-column:1 / -1; min-height:30px; color:#e7ebed; font:500 18px 'Space Grotesk'; text-align:center; }
+.in-call-keypad button { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:54px; border:1px solid #ffffff14; border-radius:50%; color:#f3f5f6; background:#ffffff12; cursor:pointer; }
+.in-call-keypad button strong { font:400 22px 'Space Grotesk'; }
+.in-call-keypad button small { color:#aeb8bd; font-size:9px; letter-spacing:1px; }
 .task-modal { max-height:90svh; overflow:auto; }.task-modal label { margin:16px 0; }.settings-panel { padding:26px; border:1px solid var(--line); border-radius:18px; background:#151b1bdd; }.setting-copy h2 { margin:0 0 8px; font:500 21px 'Space Grotesk'; }.setting-copy p { color:#a9b2b2; line-height:1.55; }.toggle { display:flex !important; align-items:center; gap:10px; color:#dce2df !important; cursor:pointer; }.toggle input { position:absolute; opacity:0; pointer-events:none; }.toggle-track { position:relative; width:46px; height:26px; flex:none; border-radius:20px; background:#394342; transition:background .2s; }.toggle-track::after { content:""; position:absolute; width:20px; height:20px; top:3px; left:3px; border-radius:50%; background:#d6ddda; transition:transform .2s; }.toggle input:checked + .toggle-track { background:var(--green); }.toggle input:checked + .toggle-track::after { transform:translateX(20px); background:#12200e; }.settings-panel small { display:block; margin-top:7px; color:var(--muted); }.save-confirmation { color:var(--green); font-size:13px; }
