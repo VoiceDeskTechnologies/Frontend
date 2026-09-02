@@ -154,6 +154,10 @@
 .phone-shell:has(.live-call) { background:radial-gradient(circle at 10% 14%,#334752 0,#1c3032 28%,#252338 62%,#0d131c 100%); }
 .phone-shell:has(.live-call)::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.22; background:linear-gradient(132deg,transparent 18%,#8292a01c 18.2%,transparent 48%,#b2a8d01a 48.2%,transparent 70%); }
 .live-call { width:min(430px,calc(100% - 40px)); margin-top:4vh; }
+.phone-shell:not(.feature-page):has(.live-call) .live-call { height:calc(100svh - 92px); min-height:0; margin-top:0; padding:10px 0 96px; overflow:hidden; }
+.phone-shell:not(.feature-page):has(.live-call) .caller-orb { margin-top:clamp(28px,8vh,70px); }
+.phone-shell:not(.feature-page):has(.live-call) .call-controls { margin-top:clamp(30px,9vh,78px); }
+.phone-shell:not(.feature-page):has(.live-call) .call-popover { max-height:28svh; overflow:auto; }
 .live-call .call-topline { color:#d2d7dc; }
 .live-call .call-back,.live-call .call-more { border:0; color:#e2e6e9; background:#ffffff12; }
 .live-call .call-back { transform:none; font-size:26px; }
