@@ -1,3 +1,5 @@
+.inline-editor { display:flex; gap:8px; margin-top:12px; }.inline-editor select { min-width:150px; padding:9px; border:1px solid #3a4642; border-radius:8px; color:var(--ink); background:#0c1211; }.inline-editor .primary-action { width:auto; margin:0; padding:9px 12px; }
+.support-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,1fr); gap:14px; }.support-layout .contact-row { width:100%; border:1px solid var(--line); color:inherit; text-align:left; cursor:pointer; }.support-messages { display:grid; gap:10px; margin:18px 0; }.support-messages p { margin:0; padding:12px; border-radius:10px; color:#dce5e1; background:#0e1413; line-height:1.5; }.support-messages strong { display:block; margin-bottom:4px; color:var(--green); font-size:12px; }
 .pricing-page { color:#18201d; }
 .pricing-hero { max-width:1200px; margin:auto; padding:130px clamp(24px,6vw,80px) 80px; }
 .admin-app { min-height:100svh; background:radial-gradient(circle at 72% 0%,#18233a 0,#0a1220 34%,#070d18 100%); color:#edf2f4; font-family:'DM Sans',sans-serif; }

@@ -36,6 +36,7 @@ const menuItems = [
   "Help & Support",
 ];
 const menuIcons = ["♙", "▯", "☑", "▤", "◔", "▤", "⚙", "?"];
+const menuRoutes: Record<string, string> = { "My Numbers": "/numbers", "Knowledge Base": "/knowledge", "Help & Support": "/support" };
 type CallSummary = { direction: string; status: string };
 type Contact = {
   id: string;
@@ -352,9 +353,7 @@ export default function Home() {
                 <div key={item} className={index === 3 || index === 5 ? "menu-section-end" : ""}>
                   <Link
                     href={
-                      item === "Call Tasks"
-                        ? "/tasks"
-                        : `/${item.toLowerCase().replaceAll(" ", "-")}`
+                      menuRoutes[item] ?? (item === "Call Tasks" ? "/tasks" : `/${item.toLowerCase().replaceAll(" ", "-")}`)
                     }
                   >
                     <span className={`menu-icon menu-icon-${index}`} aria-hidden="true">{menuIcons[index]}</span>
