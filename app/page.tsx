@@ -178,6 +178,10 @@ export default function Home() {
   }
   async function startAiCall() {
     setCallError("");
+    if (!/^\+[1-9]\d{6,14}$/.test(number)) {
+      setCallError("Enter the full number in international format, for example +14155550123.");
+      return;
+    }
     try {
       await apiRequest<{ allowed: boolean }>("/api/calls/authorize", {
         method: "POST",
@@ -466,6 +470,7 @@ export default function Home() {
             <div className={`number-display ${number ? "has-number" : ""}`}>
               {number || "Enter a number"}
             </div>
+            {!number.startsWith("+") && <button className="prefix-button" aria-label="Add international plus prefix" onClick={() => setNumber((current) => current ? `+${current}` : "+")}>+</button>}
             {number && (
               <button
                 className="erase-button"
