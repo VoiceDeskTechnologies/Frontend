@@ -176,7 +176,7 @@
 .live-call .call-controls .control:first-child span { position:relative; font-size:0; background:linear-gradient(55deg,transparent 46%,currentColor 47%,currentColor 53%,transparent 54%),#ffffff12; }
 .live-call .call-controls .control:first-child span::before { content:""; width:12px; height:19px; border:2px solid currentColor; border-radius:8px; }
 .live-call .call-controls .control:first-child span::after { content:""; position:absolute; bottom:12px; width:22px; height:11px; border-bottom:2px solid currentColor; border-radius:0 0 14px 14px; box-shadow:0 7px 0 -5px currentColor; }
-.live-call .call-controls .control:nth-child(2) { position:relative; left:72px; }
+.live-call .call-controls .control:nth-child(2) { position:relative; left:72px; transform:translateY(-22px); }
 .phone-glyph { display:grid; place-items:center; }
 .phone-glyph svg { width:32px; height:32px; fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:2.4; transform:rotate(135deg); }
 .call-button .phone-glyph svg { width:35px; height:35px; }
