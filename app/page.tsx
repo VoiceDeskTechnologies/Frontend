@@ -35,6 +35,7 @@ const menuItems = [
   "Settings",
   "Help & Support",
 ];
+const menuIcons = ["♙", "▯", "☑", "▤", "◔", "▤", "⚙", "?"];
 type CallSummary = { direction: string; status: string };
 type Contact = {
   id: string;
@@ -347,17 +348,19 @@ export default function Home() {
               onClick={() => setMenuOpen(false)}
             />
             <nav className="overflow-menu" aria-label="HandsFree navigation">
-              {menuItems.map((item) => (
-                <Link
-                  href={
-                    item === "Call Tasks"
-                      ? "/tasks"
-                      : `/${item.toLowerCase().replaceAll(" ", "-")}`
-                  }
-                  key={item}
-                >
-                  {item}
-                </Link>
+              {menuItems.map((item, index) => (
+                <div key={item} className={index === 3 || index === 5 ? "menu-section-end" : ""}>
+                  <Link
+                    href={
+                      item === "Call Tasks"
+                        ? "/tasks"
+                        : `/${item.toLowerCase().replaceAll(" ", "-")}`
+                    }
+                  >
+                    <span className={`menu-icon menu-icon-${index}`} aria-hidden="true">{menuIcons[index]}</span>
+                    {item}
+                  </Link>
+                </div>
               ))}
               <Link className="menu-create" href="/agents/create">
                 + Create AI Agent

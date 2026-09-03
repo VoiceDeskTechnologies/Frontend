@@ -87,6 +87,11 @@
 .grid-icon { font-size:18px; line-height:11px; letter-spacing:3px; }.backdrop { position:fixed; inset:0; z-index:4; background:transparent; border:0; }
 .overflow-menu { position:absolute; z-index:5; top:92px; right:clamp(24px,5vw,72px); width:270px; border:1px solid #303638; border-radius:20px; overflow:hidden; background:#171c1eee; box-shadow:0 22px 60px #000b; backdrop-filter:blur(22px); animation:rise .2s ease-out; }
 .overflow-menu a { display:block; padding:14px 20px; color:#e1e5e5; text-decoration:none; border-bottom:1px solid #2b3133; font-size:14px; }
+.overflow-menu a { display:flex; align-items:center; gap:13px; }
+.overflow-menu .menu-section-end a { border-bottom:0; }
+.overflow-menu .menu-section-end { border-bottom:1px solid #2b3133; }
+.menu-icon { display:grid; place-items:center; width:21px; height:21px; flex:none; color:#8ce05f; font-size:22px; line-height:1; }
+.menu-icon-2 { color:#b174ed; }.menu-icon-3 { color:#76a9f1; }.menu-icon-4 { color:#efbd3c; }.menu-icon-5 { color:#ef7599; }.menu-icon-6,.menu-icon-7 { color:#dce5e1; }
 .overflow-menu a:hover { background:#242b2d; }.overflow-menu .menu-create { color:var(--green); border:0; }
 .overflow-menu .menu-auth { display:block; width:100%; padding:14px 20px; border:0; border-top:1px solid #2b3133; color:#dce5e1; background:transparent; text-align:left; cursor:pointer; font-size:14px; text-decoration:none; }.overflow-menu .menu-auth:hover { background:#242b2d; }.menu-auth span { display:inline-block; width:21px; color:var(--green); font-size:20px; line-height:12px; vertical-align:-2px; }
 .modal-layer { position:fixed; z-index:10; inset:0; display:grid; place-items:center; padding:20px; background:#0009; backdrop-filter:blur(12px); }
