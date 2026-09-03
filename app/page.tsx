@@ -182,6 +182,10 @@ export default function Home() {
       await apiRequest<{ allowed: boolean }>("/api/calls/authorize", {
         method: "POST",
       });
+      await apiRequest("/api/calls", {
+        method: "POST",
+        body: JSON.stringify({ toNumber: number, agentId: null }),
+      });
       startRingingTone();
       setCallStartedAt(Date.now());
       setCallSeconds(0);
