@@ -78,9 +78,7 @@ export default function Home() {
   const [callStartedAt, setCallStartedAt] = useState<number | null>(null);
   const [callSeconds, setCallSeconds] = useState(0);
   const [muted, setMuted] = useState(false);
-  const [inCallKeypadOpen, setInCallKeypadOpen] = useState(false);
   const [liveTransferOpen, setLiveTransferOpen] = useState(false);
-  const [inCallDigits, setInCallDigits] = useState("");
   const [callError, setCallError] = useState("");
   const [popup, setPopup] = useState<"contacts" | "calls" | "search" | null>(
     null,
@@ -202,9 +200,7 @@ export default function Home() {
     setCallStartedAt(null);
     setCallSeconds(0);
     setMuted(false);
-    setInCallKeypadOpen(false);
     setLiveTransferOpen(false);
-    setInCallDigits("");
   }
   function formatDuration(seconds: number) {
     return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -422,7 +418,7 @@ export default function Home() {
               className={muted ? "control active-control" : "control"}
               onClick={() => setMuted((value) => !value)}
             >
-              <span>🎙</span>
+              <span aria-hidden="true" />
               <small>{muted ? "Unmute" : "Mute"}</small>
             </button>
             <button
@@ -431,13 +427,6 @@ export default function Home() {
             >
               <span>⇄</span>
               <small>Live transfer</small>
-            </button>
-            <button
-              className="control"
-              onClick={() => setInCallKeypadOpen((value) => !value)}
-            >
-              <span>⌨</span>
-              <small>Keypad</small>
             </button>
             <button
               className="end-call"
@@ -462,16 +451,6 @@ export default function Home() {
               >
                 Start live transfer <span>→</span>
               </button>
-            </div>
-          )}
-          {inCallKeypadOpen && (
-            <div className="in-call-keypad" role="group" aria-label="In-call keypad">
-              <output>{inCallDigits || "Enter tones"}</output>
-              {keys.map(([digit, letters]) => (
-                <button key={digit} onClick={() => { setInCallDigits((value) => value + digit); playDialTone(); }}>
-                  <strong>{digit}</strong><small>{letters}</small>
-                </button>
-              ))}
             </div>
           )}
         </section>
