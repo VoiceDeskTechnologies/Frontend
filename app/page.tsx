@@ -291,7 +291,7 @@ export default function Home() {
     }
   }
   return (
-    <main className="phone-shell">
+    <main className={`phone-shell ${signedIn && activeView === "dashboard" ? "dashboard-shell" : ""}`}>
       {popup === "contacts" && (
         <button
           className="popup-add-floating"

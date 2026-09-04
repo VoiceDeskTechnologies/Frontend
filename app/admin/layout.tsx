@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => { apiRequest<{ badge: string | null }>("/api/admin/support/unread-count").then((result) => setBadge(result.badge)).catch(() => setBadge(null)); }, []);
   return <div className="admin-app">
     <aside className={menuOpen ? "admin-sidebar open" : "admin-sidebar"}>
-      <div className="admin-brand"><span className="admin-brand-mark">⌁</span><span><strong>HandsFree</strong><small>by VoiceDesk Technologies</small></span></div>
+      <Link className="admin-brand" href="/"><span className="admin-brand-mark">⌁</span><span><strong>HandsFree</strong><small>by VoiceDesk Technologies</small></span></Link>
       <nav className="admin-nav" aria-label="Admin navigation">{navigation.map(([label, href, icon]) => <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(href)) ? "active" : ""} onClick={() => setMenuOpen(false)}><span aria-hidden="true">{icon}</span>{label}{label === "Support" && badge && <b className="admin-badge">{badge}</b>}</Link>)}</nav>
       <div className="admin-profile"><span className="profile-avatar">A</span><span><strong>Administrator</strong><small>Operations control</small></span><span className="profile-more">⋮</span></div>
     </aside>
