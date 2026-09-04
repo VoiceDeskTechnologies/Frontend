@@ -7,11 +7,12 @@ import { useEffect } from "react";
 import { apiRequest } from "@/lib/api/client";
 
 const groups = [
-  ["ACCOUNT", [["My Profile", "/settings/profile", "♙"], ["My Numbers", "/numbers", "☎"], ["Subscription & Billing", "/billing", "▤"], ["Usage & Minutes", "/usage", "◔"]]],
-  ["AI & BUSINESS", [["AI Agents", "/agents", "✦"], ["Call Tasks", "/tasks", "◷"], ["Knowledge Base", "/knowledge", "▤"], ["Contacts", "/contacts", "◎"]]],
+  ["ACCOUNT", [["My Profile", "/settings/profile", "♙"], ["My Numbers", "/settings/numbers", "☎"], ["Subscription & Billing", "/settings/billing", "▤"], ["Usage & Minutes", "/settings/usage", "◔"], ["Payment Methods", "/settings/payment-methods", "▣"], ["Invoices", "/settings/invoices", "▤"]]],
+  ["AI & BUSINESS", [["AI Agents", "/agents", "✦"], ["Call Tasks", "/settings/call-tasks", "◷"], ["Knowledge Base", "/settings/knowledge-base", "▤"], ["Contacts", "/settings/contacts", "◎"], ["Templates", "/settings/templates", "□"]]],
   ["INTEGRATIONS", [["Integrations", "/settings/integrations", "↔"], ["Webhooks", "/settings/webhooks", "⌁"]]],
-  ["APP", [["Notifications", "/settings/notifications", "♧"], ["Appearance", "/settings/appearance", "◐"], ["Sounds", "/settings/sounds", "◉"]]],
-  ["SUPPORT", [["Help Center", "/support", "?"], ["About HANDSFREE", "/settings/about", "i"]]],
+  ["APP", [["Notifications", "/settings/notifications", "♧"], ["Appearance", "/settings/appearance", "◐"], ["Language", "/settings/language", "文"], ["Sounds", "/settings/sounds", "◉"]]],
+  ["SECURITY", [["Security", "/settings/security", "⌑"]]],
+  ["SUPPORT", [["Help Center", "/settings/help", "?"], ["About HANDSFREE", "/settings/about", "i"]]],
 ] as const;
 
 export default function SettingsPage() {
