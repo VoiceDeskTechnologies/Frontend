@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { apiRequest } from "@/lib/api/client";
 import {
@@ -25,18 +26,6 @@ const keys = [
   ["0", "+"],
   ["#", ""],
 ];
-const menuItems = [
-  "AI Agents",
-  "My Numbers",
-  "Call Tasks",
-  "Knowledge Base",
-  "Usage",
-  "Billing",
-  "Settings",
-  "Help & Support",
-];
-const menuIcons = ["♙", "▯", "☑", "▤", "◔", "▤", "⚙", "?"];
-const menuRoutes: Record<string, string> = { "My Numbers": "/numbers", "Knowledge Base": "/knowledge", "Help & Support": "/support" };
 type CallSummary = { direction: string; status: string };
 type Contact = {
   id: string;
@@ -65,10 +54,24 @@ type SearchResults = {
   }[];
   agents: { id: string; name: string; role: string }[];
 };
+type DashboardNumber = { phone_number: string; provisioning_status: string; is_default: boolean };
+type DashboardAgent = { id: string; name: string; role: string; status: string };
+type DashboardUsage = { plan: { plans: { name: string; minutes: number }; included_minutes: number; used_minutes: number } | null; trial: { trial_status: string; trial_expires_at: string; trial_minutes_granted: number; trial_minutes_remaining: number } | null; balances: { planMinutes: number; trialMinutes: number } };
+
+function Dashboard({ numbers, usage, calls, agents, onMakeCall, onCreateAgent, onCreateTask, onAddContact }: { numbers: DashboardNumber[]; usage: DashboardUsage | null; calls: Call[]; agents: DashboardAgent[]; onMakeCall: () => void; onCreateAgent: () => void; onCreateTask: () => void; onAddContact: () => void }) {
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const number = numbers.find((item) => item.is_default) ?? numbers[0];
+  const used = usage?.plan ? Number(usage.plan.included_minutes) - Number(usage.balances.planMinutes) : Number(usage?.trial?.trial_minutes_granted ?? 0) - Number(usage?.balances.trialMinutes ?? 0);
+  const total = usage?.plan?.included_minutes ?? usage?.trial?.trial_minutes_granted ?? 0;
+  return <section className="dashboard-content"><div className="dashboard-heading"><span className="eyebrow">YOUR HANDSFREE</span><h1>{greeting}, there.</h1><p>Here&apos;s what&apos;s happening with your HANDSFREE account.</p></div><div className="dashboard-grid"><article className="dashboard-card number-card"><div><small>YOUR HANDSFREE NUMBER</small><h2>{number?.phone_number ?? (numbers.some((item) => item.provisioning_status === "provisioning") ? "Your number is being prepared..." : "No HANDSFREE number assigned")}</h2><p className="dashboard-status">● {number?.provisioning_status === "active" ? "Active" : number?.provisioning_status ?? "Provisioning"}</p></div><Link href="/numbers" className="dashboard-link">Manage number →</Link></article><article className="dashboard-card usage-card"><small>{usage?.plan ? "AI MINUTES" : "TRIAL"}</small><h2>{Math.max(0, used).toFixed(0)} / {total} used</h2><div className="dashboard-progress"><span style={{ width: `${total ? Math.min(100, Math.max(0, used / total * 100)) : 0}%` }} /></div><p>{usage?.plan ? `${Math.max(0, Number(usage.balances.planMinutes)).toFixed(0)} minutes remaining · ${usage.plan.plans.name}` : `${Math.max(0, Number(usage?.balances.trialMinutes ?? 0)).toFixed(0)} minutes remaining`}</p></article></div><section className="dashboard-section"><div className="dashboard-section-heading"><h2>Quick actions</h2></div><div className="quick-actions"><button onClick={onMakeCall}><span>☎</span>Make a call</button><button onClick={onCreateAgent}><span>✦</span>Create AI agent</button><button onClick={onCreateTask}><span>◷</span>Create call task</button><button onClick={onAddContact}><span>◎</span>Add contact</button></div></section><div className="dashboard-columns"><section className="dashboard-section"><div className="dashboard-section-heading"><h2>Recent calls</h2><Link href="/calls">View all →</Link></div>{calls.length ? calls.slice(0, 4).map((call) => <article className="dashboard-row" key={call.id}><span className="dashboard-row-icon">{call.direction === "inbound" ? "↓" : "↑"}</span><div><strong>{call.to_number}</strong><small>{call.direction === "inbound" ? "Incoming" : "Outgoing"} · {new Date(call.created_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}</small></div><em>{call.duration_seconds ? `${Math.floor(call.duration_seconds / 60)}m ${call.duration_seconds % 60}s` : call.status}</em></article>) : <p className="dashboard-empty">No calls yet.</p>}</section><section className="dashboard-section"><div className="dashboard-section-heading"><h2>Your AI agents</h2><Link href="/agents">View all →</Link></div>{agents.length ? agents.slice(0, 3).map((agent) => <article className="dashboard-row" key={agent.id}><span className="agent-avatar">{agent.name.slice(0, 1).toUpperCase()}</span><div><strong>{agent.name}</strong><small>{agent.role}</small></div><em className="dashboard-agent-status">● {agent.status}</em></article>) : <><p className="dashboard-empty">You haven&apos;t created an AI agent yet.</p><button className="dashboard-inline-action" onClick={onCreateAgent}>Create your first agent →</button></>}</section></div></section>;
+}
 
 export default function Home() {
+  const router = useRouter();
+  const [activeView, setActiveView] = useState<"dashboard" | "calls">("dashboard");
+  const [actionSheetOpen, setActionSheetOpen] = useState(false);
   const [number, setNumber] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
   const [callMode, setCallMode] = useState(false);
   const [task, setTask] = useState("");
   const [signedIn, setSignedIn] = useState(false);
@@ -95,6 +98,10 @@ export default function Home() {
   });
   const [popupLoading, setPopupLoading] = useState(false);
   const [popupError, setPopupError] = useState("");
+  const [dashboardNumbers, setDashboardNumbers] = useState<DashboardNumber[]>([]);
+  const [dashboardUsage, setDashboardUsage] = useState<DashboardUsage | null>(null);
+  const [dashboardCalls, setDashboardCalls] = useState<Call[]>([]);
+  const [dashboardAgents, setDashboardAgents] = useState<DashboardAgent[]>([]);
   const [contactComposerOpen, setContactComposerOpen] = useState(false);
   const [contactSaving, setContactSaving] = useState(false);
   const [contactForm, setContactForm] = useState({
@@ -120,6 +127,10 @@ export default function Home() {
     );
     return () => listener.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (authReady && !signedIn) router.replace("/auth/login");
+  }, [authReady, signedIn, router]);
 
   useEffect(() => () => stopAllCallSounds(), []);
   useEffect(() => {
@@ -147,6 +158,21 @@ export default function Home() {
   }, [signedIn]);
 
   useEffect(() => {
+    if (!signedIn) return;
+    Promise.all([
+      apiRequest<DashboardNumber[]>("/api/numbers"),
+      apiRequest<DashboardUsage>("/api/usage"),
+      apiRequest<Call[]>("/api/calls"),
+      apiRequest<DashboardAgent[]>("/api/agents"),
+    ]).then(([numbers, usage, recentCalls, agents]) => {
+      setDashboardNumbers(numbers);
+      setDashboardUsage(usage);
+      setDashboardCalls(recentCalls);
+      setDashboardAgents(agents);
+    }).catch(() => undefined);
+  }, [signedIn]);
+
+  useEffect(() => {
     if (!popup) return;
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") setPopup(null);
@@ -169,13 +195,6 @@ export default function Home() {
       .finally(() => setPopupLoading(false));
   }, [popup, signedIn]);
 
-  async function logOut() {
-    const supabase = createSupabaseBrowserClient();
-    if (supabase) await supabase.auth.signOut();
-    setSignedIn(false);
-    setMissedCalls(0);
-    setMenuOpen(false);
-  }
   async function startAiCall() {
     setCallError("");
     if (!/^\+[1-9]\d{6,14}$/.test(number)) {
@@ -342,52 +361,8 @@ export default function Home() {
           </span>
           <span className="brand-parent">by VoiceDesk Technologies</span>
         </Link>
-        <button
-          className="icon-button"
-          aria-label="Open navigation"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          •••
-        </button>
-        {menuOpen && (
-          <>
-            <button
-              className="backdrop"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-            />
-            <nav className="overflow-menu" aria-label="HandsFree navigation">
-              {menuItems.map((item, index) => (
-                <div key={item} className={index === 3 || index === 5 ? "menu-section-end" : ""}>
-                  <Link
-                    href={
-                      menuRoutes[item] ?? (item === "Call Tasks" ? "/tasks" : `/${item.toLowerCase().replaceAll(" ", "-")}`)
-                    }
-                  >
-                    <span className={`menu-icon menu-icon-${index}`} aria-hidden="true">{menuIcons[index]}</span>
-                    {item}
-                  </Link>
-                </div>
-              ))}
-              <Link className="menu-create" href="/agents/create">
-                + Create AI Agent
-              </Link>
-              {authReady &&
-                (signedIn ? (
-                  <button className="menu-auth" onClick={logOut}>
-                    <span aria-hidden="true">⇥</span> Log out
-                  </button>
-                ) : (
-                  <Link className="menu-auth" href="/auth/login">
-                    {" "}
-                    <span aria-hidden="true">⇥</span> Log in
-                  </Link>
-                ))}
-            </nav>
-          </>
-        )}
       </header>
-      {ringing ? (
+      {signedIn && activeView === "dashboard" ? <Dashboard numbers={dashboardNumbers} usage={dashboardUsage} calls={dashboardCalls} agents={dashboardAgents} onMakeCall={() => setActiveView("calls")} onCreateAgent={() => router.push("/agents/create")} onCreateTask={() => router.push("/tasks")} onAddContact={() => openPopup("contacts")} /> : ringing ? (
         <section className="live-call" aria-label="Live call">
           <div className="call-topline">
             <button
@@ -398,9 +373,7 @@ export default function Home() {
               ↓
             </button>
             <span>{callSeconds === 0 ? "CONNECTING" : "AI CALL"}</span>
-            <button className="call-more" onClick={() => setLiveTransferOpen((value) => !value)} aria-label="More call options">
-              •••
-            </button>
+            <span className="call-topline-spacer" aria-hidden="true" />
           </div>
           <div className="caller-orb">{number.slice(-2) || "HF"}</div>
           <h1>{number || "Unknown caller"}</h1>
@@ -515,19 +488,8 @@ export default function Home() {
         </section>
       )}
       <nav className="bottom-nav" aria-label="Primary navigation">
-        <button onClick={() => openPopup("contacts")}>
-          <span className="nav-icon">◎</span>Contacts
-        </button>
-        <Link className="active" href="/">
-          <span className="nav-icon grid-icon">
-            ••
-            <br />
-            ••
-          </span>
-          Keypad
-        </Link>
-        <button className="call-nav-item" onClick={() => openPopup("calls")}>
-          <span className="nav-icon">◷</span>Calls
+        <button className={activeView === "dashboard" ? "active" : ""} onClick={() => setActiveView("dashboard")}><span className="nav-icon">⌂</span>Dashboard</button>
+        <button className={activeView === "calls" ? "active call-nav-item" : "call-nav-item"} onClick={() => setActiveView("calls")}><span className="nav-icon">☎</span>Calls
           {missedCalls > 0 && (
             <span
               className="call-badge"
@@ -537,10 +499,11 @@ export default function Home() {
             </span>
           )}
         </button>
-        <button onClick={() => openPopup("search")}>
-          <span className="nav-icon">⌕</span>Search
-        </button>
+        <button className="plus-nav-item" onClick={() => setActionSheetOpen(true)} aria-label="Open quick actions"><span className="nav-icon">+</span></button>
+        <Link href="/agents"><span className="nav-icon">✦</span>AI Agents</Link>
+        <Link href="/settings"><span className="nav-icon">⚙</span>Settings</Link>
       </nav>
+      {actionSheetOpen && <div className="modal-layer" role="dialog" aria-modal="true" aria-labelledby="quick-actions-title" onMouseDown={(event) => { if (event.target === event.currentTarget) setActionSheetOpen(false); }}><section className="action-sheet"><button className="modal-close" onClick={() => setActionSheetOpen(false)} aria-label="Close">×</button><span className="eyebrow">QUICK ACTIONS</span><h1 id="quick-actions-title">What would you like to do?</h1><button onClick={() => { setActionSheetOpen(false); setActiveView("calls"); }}><span>☎</span>Make a call</button><Link href="/agents/create"><span>✦</span>Create AI agent</Link><Link href="/tasks"><span>◷</span>Create call task</Link><button onClick={() => { setActionSheetOpen(false); openPopup("contacts"); }}><span>◎</span>Add contact</button></section></div>}
       {popup && (
         <div
           className="modal-layer popup-layer"
