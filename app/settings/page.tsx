@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { apiRequest } from "@/lib/api/client";
 
 const groups = [
-  ["ACCOUNT", [["My Profile", "/settings/profile", "♙"], ["My Numbers", "/settings/numbers", "☎"], ["Subscription & Billing", "/settings/billing", "▤"], ["Usage & Minutes", "/settings/usage", "◔"], ["Payment Methods", "/settings/payment-methods", "▣"], ["Invoices", "/settings/invoices", "▤"]]],
+  ["ACCOUNT", [["My Profile", "/settings/profile", "♙"], ["My Numbers", "/settings/numbers", "☎"], ["Subscription & Billing", "/settings/billing", "▤"], ["Pricing & Plans", "/pricing", "$"], ["Usage & Minutes", "/settings/usage", "◔"], ["Payment Methods", "/settings/payment-methods", "▣"], ["Invoices", "/settings/invoices", "▤"]]],
   ["AI & BUSINESS", [["AI Agents", "/agents", "✦"], ["Call Tasks", "/settings/call-tasks", "◷"], ["Knowledge Base", "/settings/knowledge-base", "▤"], ["Contacts", "/settings/contacts", "◎"], ["Templates", "/settings/templates", "□"]]],
   ["INTEGRATIONS", [["Integrations", "/settings/integrations", "↔"], ["Webhooks", "/settings/webhooks", "⌁"]]],
   ["APP", [["Notifications", "/settings/notifications", "♧"], ["Appearance", "/settings/appearance", "◐"], ["Language", "/settings/language", "文"], ["Sounds", "/settings/sounds", "◉"]]],
