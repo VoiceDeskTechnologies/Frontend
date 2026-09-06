@@ -7,7 +7,7 @@ import { apiRequest } from "@/lib/api/client";
 
 const navigation = [
   ["Dashboard", "/admin", "▦"], ["Users", "/admin/users", "♙"], ["Calls", "/admin/calls", "◷"], ["AI Agents", "/admin/agents", "✦"], ["Phone Numbers", "/admin/phone-numbers", "⌕"],
-  ["Billing & Revenue", "/admin/billing", "$"], ["Usage & Analytics", "/admin/usage", "▥"], ["Support", "/admin/support", "●"], ["Settings", "/admin/settings", "⚙"], ["Audit Logs", "/admin/audit-logs", "▤"],
+  ["Billing & Revenue", "/admin/billing", "$"], ["Usage & Analytics", "/admin/usage", "▥"], ["Updates", "/admin/updates", "✦"], ["Support", "/admin/support", "●"], ["Settings", "/admin/settings", "⚙"], ["Audit Logs", "/admin/audit-logs", "▤"],
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

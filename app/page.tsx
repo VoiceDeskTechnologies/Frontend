@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { apiRequest } from "@/lib/api/client";
+import UpdatePopup from "@/components/UpdatePopup";
 import {
   playCallEndTone,
   playDialTone,
@@ -292,6 +293,7 @@ export default function Home() {
   }
   return (
     <main className={`phone-shell ${signedIn && activeView === "dashboard" ? "dashboard-shell" : ""}`}>
+      <UpdatePopup />
       {popup === "contacts" && (
         <button
           className="popup-add-floating"
