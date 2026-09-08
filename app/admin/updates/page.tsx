@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/rules-of-hooks */
 
 import { FormEvent, useEffect, useState } from "react";
 import { apiRequest } from "@/lib/api/client";

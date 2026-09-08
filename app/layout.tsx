@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HandsFree | Let AI handle the call",
-  description: "Your AI, on the phone.",
+  title: "HANDSFREE | AI That Works for Your Business",
+  description: "Let HANDSFREE handle your business calls with AI phone agents that speak, listen, understand, and take action.",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",

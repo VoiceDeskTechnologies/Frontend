@@ -234,3 +234,24 @@
 @keyframes update-arrive { from { opacity:0; transform:translateY(16px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } } @keyframes update-float { 0%,100% { transform:translateY(8px) rotate(-8deg); } 50% { transform:translateY(-12px) rotate(12deg); } }
 @media (max-width:800px) { .updates-admin-grid { grid-template-columns:1fr; }.update-popup { padding:34px 24px 25px; }.update-popup h2 { font-size:28px; } }
 @media (max-width:760px) { .faq-section h2 { font-size:34px; }.checkout-wrap { grid-template-columns:1fr; width:calc(100% - 32px); margin-top:5vh; }.order-summary { grid-row:1; position:static; }.checkout-fields { grid-template-columns:1fr; }.checkout-panel,.order-summary { padding:19px; } }
+.demo-call-form { display:grid; gap:18px; }
+.demo-call-form-heading h3 { margin:8px 0; color:#18201d; font:500 30px 'Space Grotesk'; }
+.demo-call-form-heading p:not(.public-kicker) { margin:0; color:#61706a; line-height:1.5; }
+.demo-call-form label { display:grid; gap:7px; color:#33413b; font-size:12px; font-weight:600; }
+.demo-call-form input,.demo-call-form select { width:100%; padding:13px 14px; border:1px solid #b8c5b9; border-radius:9px; color:#18201d; background:#fbfcf8; font:inherit; }
+.demo-call-form input:focus,.demo-call-form select:focus { outline:2px solid #56a94066; outline-offset:2px; }
+.demo-field-note { color:#718077; font-size:11px; font-weight:400; }
+.demo-call-card { display:grid; justify-items:center; min-height:390px; padding:24px; border:1px solid #304b3b; border-radius:18px; color:#f2f7f1; background:linear-gradient(150deg,#193228,#0c1814); box-shadow:0 22px 70px #183d2540; text-align:center; }
+.demo-call-topline { display:flex; align-items:center; gap:8px; width:100%; color:#a9c1ad; font-size:10px; letter-spacing:1.5px; }
+.demo-call-topline button { margin-left:auto; border:0; color:#bdd0c0; background:transparent; font-size:25px; cursor:pointer; }
+.live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#77d66e; box-shadow:0 0 12px #77d66e; }
+.demo-call-orb { display:grid; place-items:center; width:76px; height:76px; margin-top:36px; border:1px solid #ffffff30; border-radius:50%; color:#fff; background:linear-gradient(145deg,#76a675,#294c37); font:600 24px 'Space Grotesk'; box-shadow:0 0 0 12px #ffffff08; }
+.demo-call-card h3 { margin:18px 0 4px; font:500 25px 'Space Grotesk'; }
+.demo-call-status { margin:0; color:#b4c6b8; font-size:12px; }
+.demo-call-time { margin-top:14px; color:#f4f8f2; font:500 31px 'Space Grotesk'; letter-spacing:1px; }
+.demo-call-controls { display:flex; align-items:center; gap:28px; margin-top:30px; }
+.demo-call-controls button { display:grid; justify-items:center; gap:7px; min-width:72px; border:0; color:#dce9de; background:transparent; font-size:11px; cursor:pointer; }
+.demo-call-controls button span { display:grid; place-items:center; width:52px; height:52px; border:1px solid #ffffff20; border-radius:50%; background:#ffffff12; font-size:22px; }
+.demo-call-controls button.selected span { color:#17251b; background:#f5f8f3; }
+.demo-call-controls .demo-call-end span { color:#fff; background:#df4650; transform:rotate(135deg); }
+.demo-call-limit { margin:22px 0 0; color:#ffcf9c; font-size:12px; }

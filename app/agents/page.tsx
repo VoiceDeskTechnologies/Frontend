@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { apiRequest } from "@/lib/api/client";
 
-type Agent = { id: string; name: string; role: string; personality: string; greeting: string; system_instructions: string; status: "active" | "disabled"; };
+type Agent = { id: string; name: string; agent_type?: string; objective?: string; role: string; personality: string; greeting: string; system_instructions: string; status: "active" | "disabled"; };
 export default function AgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([]); const [error, setError] = useState(""); const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Agent | null>(null); const [saving, setSaving] = useState(false); const [deleting, setDeleting] = useState("");
