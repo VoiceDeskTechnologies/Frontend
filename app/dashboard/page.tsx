@@ -10,6 +10,7 @@ import {
   playCallEndTone,
   playDialTone,
   startRingingTone,
+  stopRingingTone,
   stopAllCallSounds,
 } from "@/lib/audio/callSounds";
 
@@ -28,6 +29,7 @@ const keys = [
   ["#", ""],
 ];
 type CallSummary = { direction: string; status: string };
+type LiveTranscriptLine = { speaker: "caller" | "agent"; text: string };
 type Contact = {
   id: string;
   first_name: string;
@@ -84,6 +86,10 @@ export default function Home() {
   const [callStartedAt, setCallStartedAt] = useState<number | null>(null);
   const [callSeconds, setCallSeconds] = useState(0);
   const [muted, setMuted] = useState(false);
+  const [speakerOn, setSpeakerOn] = useState(false);
+  const [activeCallId, setActiveCallId] = useState<string | null>(null);
+  const [callStatus, setCallStatus] = useState("initiating");
+  const [transcript] = useState<LiveTranscriptLine[]>([]);
   const [liveTransferOpen, setLiveTransferOpen] = useState(false);
   const [callError, setCallError] = useState("");
   const [popup, setPopup] = useState<"contacts" | "calls" | "search" | null>(
@@ -142,6 +148,28 @@ export default function Home() {
     );
     return () => window.clearInterval(timer);
   }, [ringing, callStartedAt]);
+
+  useEffect(() => {
+    if (!ringing || !activeCallId) return;
+    const pollCall = () => {
+      void apiRequest<Call[]>("/api/calls").then((recentCalls) => {
+        const activeCall = recentCalls.find((call) => call.id === activeCallId);
+        if (!activeCall) return;
+        setCallStatus(activeCall.status);
+        if (activeCall.status === "connected" && callStartedAt === null) {
+          stopRingingTone();
+          setCallStartedAt(Date.now());
+          setCallSeconds(0);
+        }
+        if (["completed", "failed", "cancelled", "busy", "no_answer"].includes(activeCall.status)) {
+          endCall();
+        }
+      }).catch(() => undefined);
+    };
+    pollCall();
+    const timer = window.setInterval(pollCall, 2000);
+    return () => window.clearInterval(timer);
+  }, [ringing, activeCallId, callStartedAt]);
 
   useEffect(() => {
     if (!signedIn) return;
@@ -206,12 +234,14 @@ export default function Home() {
       await apiRequest<{ allowed: boolean }>("/api/calls/authorize", {
         method: "POST",
       });
-      await apiRequest("/api/calls", {
+      const createdCall = await apiRequest<{ id: string; status: string }>("/api/calls", {
         method: "POST",
         body: JSON.stringify({ toNumber: number, agentId: null }),
       });
       startRingingTone();
-      setCallStartedAt(Date.now());
+      setActiveCallId(createdCall.id);
+      setCallStatus(createdCall.status);
+      setCallStartedAt(null);
       setCallSeconds(0);
       setRinging(true);
       setCallMode(false);
@@ -230,6 +260,9 @@ export default function Home() {
     setCallStartedAt(null);
     setCallSeconds(0);
     setMuted(false);
+    setSpeakerOn(false);
+    setActiveCallId(null);
+    setCallStatus("completed");
     setLiveTransferOpen(false);
   }
   function formatDuration(seconds: number) {
@@ -374,19 +407,21 @@ export default function Home() {
             >
               ↓
             </button>
-            <span>{callSeconds === 0 ? "CONNECTING" : "AI CALL"}</span>
+            <span>{callStatus === "connected" ? "AI CALL" : "CALLING"}</span>
             <span className="call-topline-spacer" aria-hidden="true" />
           </div>
-          <div className="caller-orb">{number.slice(-2) || "HF"}</div>
-          <h1>{number || "Unknown caller"}</h1>
+          <div className="caller-orb"><span className="voice-bars" aria-hidden="true"><i /><i /><i /><i /><i /></span></div>
+          <h1>AI Agent</h1>
           <p className="caller-number">
-            {callSeconds === 0
-              ? "Connecting securely..."
-              : formatDuration(callSeconds)}
+            {callStatus === "connected" ? formatDuration(callSeconds) : "Calling for your business..."}
           </p>
           <p className="agent-line">
             <span className="status-dot" /> Sarah · AI agent
           </p>
+          <section className="live-transcript" aria-live="polite" aria-label="Live transcript">
+            <div className="transcript-heading"><span>LIVE TRANSCRIPT</span><i /></div>
+            {transcript.length ? transcript.map((line, index) => <p key={`${line.speaker}-${index}`} className={line.speaker === "agent" ? "agent-transcript" : "caller-transcript"}><strong>{line.speaker === "agent" ? "Sarah · AI agent" : "Caller"}</strong>{line.text}</p>) : <p className="transcript-empty">Waiting for the conversation to begin...</p>}
+          </section>
           <div className="waveform" aria-label="Call audio activity">
             <i />
             <i />
@@ -402,16 +437,18 @@ export default function Home() {
             <button
               className={muted ? "control active-control" : "control"}
               onClick={() => setMuted((value) => !value)}
+              aria-pressed={muted}
             >
               <span aria-hidden="true" />
-              <small>{muted ? "Unmute" : "Mute"}</small>
+              <small>{muted ? "Unmute AI" : "Mute AI"}</small>
             </button>
             <button
-              className="control"
-              onClick={() => setLiveTransferOpen((value) => !value)}
+              className={speakerOn ? "control active-control" : "control"}
+              onClick={() => setSpeakerOn((value) => !value)}
+              aria-pressed={speakerOn}
             >
-              <span>⇄</span>
-              <small>Live transfer</small>
+              <span className="speaker-glyph" aria-hidden="true">◖))</span>
+              <small>{speakerOn ? "Speaker on" : "Speaker"}</small>
             </button>
             <button
               className="end-call"
