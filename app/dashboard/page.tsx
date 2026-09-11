@@ -387,7 +387,7 @@ export default function Home() {
       <div className="ambient-glow" />
       <header className="app-header">
         <Link
-          href="/landing"
+          href="/"
           className="brand"
           aria-label="Visit HandsFree landing page"
         >
